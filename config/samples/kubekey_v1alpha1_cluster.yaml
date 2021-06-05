@@ -4,7 +4,7 @@ metadata:
   name: cluster-sample
 spec:
   hosts:
-    - {name: node1, address: 192.168.6.2, internalAddress: 192.168.6.2, user: ubuntu, password: Qcloud@123}
+    - {name: node1, address: 192.168.6.1, internalAddress: 192.168.6.1, user: ubuntu, password: Qcloud@123}
   roleGroups:
     etcd:
       - node1
