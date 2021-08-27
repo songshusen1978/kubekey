@@ -24,7 +24,6 @@ import (
 
 	kubekeyapiv1alpha1 "github.com/kubesphere/kubekey/apis/kubekey/v1alpha1"
 	"github.com/kubesphere/kubekey/pkg/files"
-	"github.com/kubesphere/kubekey/pkg/util"
 	"github.com/kubesphere/kubekey/pkg/util/manager"
 	"github.com/pkg/errors"
 )
@@ -68,7 +67,7 @@ func FilesDownloadHTTP(mgr *manager.Manager, filepath, version, arch string) err
 			continue
 		}
 		mgr.Logger.Infoln(fmt.Sprintf("Downloading %s ...", binary.Name))
-
+		/*
 		if util.IsExist(binary.Path) {
 			// download it again if it's incorrect
 			if err := SHA256Check(binary, version); err != nil {
@@ -77,7 +76,7 @@ func FilesDownloadHTTP(mgr *manager.Manager, filepath, version, arch string) err
 				continue
 			}
 		}
-
+		*/
 		for i := 5; i > 0; i-- {
 			if output, err := exec.Command("/bin/sh", "-c", binary.GetCmd).CombinedOutput(); err != nil {
 				fmt.Println(string(output))
@@ -87,7 +86,7 @@ func FilesDownloadHTTP(mgr *manager.Manager, filepath, version, arch string) err
 				}
 				return errors.New(fmt.Sprintf("Failed to download %s binary: %s", binary.Name, binary.GetCmd))
 			}
-
+			/*
 			if err := SHA256Check(binary, version); err != nil {
 				if i == 1 {
 					return err
@@ -95,6 +94,7 @@ func FilesDownloadHTTP(mgr *manager.Manager, filepath, version, arch string) err
 				_ = exec.Command("/bin/sh", "-c", fmt.Sprintf("rm -f %s", binary.Path)).Run()
 				continue
 			}
+			 */
 			break
 		}
 	}
