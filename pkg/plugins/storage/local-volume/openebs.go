@@ -55,7 +55,7 @@ metadata:
 ---
 # Define Role that allows operations on K8s pods/deployments
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: openebs-maya-operator
 rules:
@@ -89,7 +89,7 @@ rules:
 # Bind the Service Account with the Role Privileges.
 # TODO: Check if default account also needs to be there
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: openebs-maya-operator
 subjects:
@@ -109,7 +109,7 @@ metadata:
   labels:
     name: openebs-localpv-provisioner
     openebs.io/component-name: openebs-localpv-provisioner
-    openebs.io/version: 2.9.0
+    openebs.io/version: 2.10.1
 spec:
   selector:
     matchLabels:
@@ -123,7 +123,7 @@ spec:
       labels:
         name: openebs-localpv-provisioner
         openebs.io/component-name: openebs-localpv-provisioner
-        openebs.io/version: 2.9.0
+        openebs.io/version: 2.10.1
     spec:
       serviceAccountName: openebs-maya-operator
       containers:

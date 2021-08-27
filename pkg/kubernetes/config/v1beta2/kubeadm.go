@@ -63,7 +63,6 @@ networking:
   serviceSubnet: {{ .ServiceSubnet }}
 apiServer:
   extraArgs:
-    advertise-address: {{ .AdvertiseAddress }}
 {{ toYaml .ApiServerArgs | indent 4}}
   certSANs:
     {{- range .CertSANs }}
@@ -82,10 +81,13 @@ scheduler:
   extraArgs:
 {{ toYaml .SchedulerArgs | indent 4 }}
 
-{{- if .CriSock }}
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: {{ .ControlPlanAddr }}
+  bindPort: {{ .ControlPlanPort }}
+{{- if .CriSock }}
 nodeRegistration:
   criSocket: {{ .CriSock }}
 {{- end }}
@@ -107,17 +109,16 @@ var (
 		"audit-log-maxage":    "30",
 		"audit-log-maxbackup": "10",
 		"audit-log-maxsize":   "100",
-		"audit-log-path":      "/var/log/apiserver/audit.log",
-		"feature-gates":       "CSINodeInfo=true,VolumeSnapshotDataSource=true,ExpandCSIVolumes=true,RotateKubeletServerCertificate=true",
+		"feature-gates":       "ExpandCSIVolumes=true,RotateKubeletServerCertificate=true",
 	}
 	controllermanagerArgs = map[string]string{
 		"bind-address":                          "0.0.0.0",
 		"experimental-cluster-signing-duration": "87600h",
-		"feature-gates":                         "CSINodeInfo=true,VolumeSnapshotDataSource=true,ExpandCSIVolumes=true,RotateKubeletServerCertificate=true",
+		"feature-gates":                         "ExpandCSIVolumes=true,RotateKubeletServerCertificate=true",
 	}
 	schedulerArgs = map[string]string{
 		"bind-address":  "0.0.0.0",
-		"feature-gates": "CSINodeInfo=true,VolumeSnapshotDataSource=true,ExpandCSIVolumes=true,RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true",
+		"feature-gates": "ExpandCSIVolumes=true,RotateKubeletServerCertificate=true",
 	}
 )
 
@@ -170,6 +171,8 @@ func GenerateKubeadmCfg(mgr *manager.Manager, node *kubekeyapiv1alpha1.HostCfg) 
 		"CorednsTag":             preinstall.GetImage(mgr, "coredns").Tag,
 		"Version":                mgr.Cluster.Kubernetes.Version,
 		"ClusterName":            mgr.Cluster.Kubernetes.ClusterName,
+		"ControlPlanAddr":        mgr.Cluster.ControlPlaneEndpoint.Address,
+		"ControlPlanPort":        mgr.Cluster.ControlPlaneEndpoint.Port,
 		"ControlPlaneEndpoint":   fmt.Sprintf("%s:%d", mgr.Cluster.ControlPlaneEndpoint.Domain, mgr.Cluster.ControlPlaneEndpoint.Port),
 		"PodSubnet":              mgr.Cluster.Network.KubePodsCIDR,
 		"ServiceSubnet":          mgr.Cluster.Network.KubeServiceCIDR,
@@ -177,6 +180,7 @@ func GenerateKubeadmCfg(mgr *manager.Manager, node *kubekeyapiv1alpha1.HostCfg) 
 		"ExternalEtcd":           externalEtcd,
 		"NodeCidrMaskSize":       mgr.Cluster.Kubernetes.NodeCidrMaskSize,
 		"CriSock":                containerRuntimeEndpoint,
+		"InternalLBDisabled":     !mgr.Cluster.ControlPlaneEndpoint.IsInternalLBEnabled(),
 		"AdvertiseAddress":       node.InternalAddress,
 		"ApiServerArgs":          ApiServerArgs,
 		"ControllerManagerArgs":  ControllerManagerArgs,
@@ -217,7 +221,7 @@ func getKubeletCgroupDriver(mgr *manager.Manager) (string, error) {
 func GetKubeletConfiguration(mgr *manager.Manager, criSock string) map[string]interface{} {
 	defaultKubeletConfiguration := map[string]interface{}{
 		"clusterDomain":      mgr.Cluster.Kubernetes.ClusterName,
-		"clusterDNS":         []string{"169.254.25.10"},
+		"clusterDNS":         []string{mgr.Cluster.ClusterDNS()},
 		"maxPods":            mgr.Cluster.Kubernetes.MaxPods,
 		"rotateCertificates": true,
 		"kubeReserved": map[string]string{
@@ -240,10 +244,7 @@ func GetKubeletConfiguration(mgr *manager.Manager, criSock string) map[string]in
 		"evictionMaxPodGracePeriod":        120,
 		"evictionPressureTransitionPeriod": "30s",
 		"featureGates": map[string]bool{
-			"CSINodeInfo":                    true,
-			"VolumeSnapshotDataSource":       true,
 			"ExpandCSIVolumes":               true,
-			"RotateKubeletClientCertificate": true,
 			"RotateKubeletServerCertificate": true,
 		},
 	}

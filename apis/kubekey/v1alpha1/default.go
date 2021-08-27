@@ -39,12 +39,12 @@ const (
 	DefaultEtcdVersion         = "v3.4.13"
 	DefaultEtcdPort            = "2379"
 	DefaultKubeVersion         = "v1.19.8"
-	DefaultCalicoVersion       = "v3.16.3"
+	DefaultCalicoVersion       = "v3.20.0"
 	DefaultFlannelVersion      = "v0.12.0"
-	DefaultCniVersion          = "v0.8.6"
+	DefaultCniVersion          = "v0.9.1"
 	DefaultCiliumVersion       = "v1.8.3"
 	DefaultKubeovnVersion      = "v1.5.0"
-	DefaultHelmVersion         = "v3.2.1"
+	DefaultHelmVersion         = "v3.6.3"
 	DefaultMaxPods             = 110
 	DefaultNodeCidrMaskSize    = 24
 	DefaultIPIPMode            = "Always"
@@ -143,20 +143,20 @@ func SetDefaultHostsCfg(cfg *ClusterSpec) []HostCfg {
 
 func SetDefaultLBCfg(cfg *ClusterSpec, masterGroup []HostCfg, incluster bool) ControlPlaneEndpoint {
 	if !incluster {
-		//The detection is not an HA environment, and the address at LB does not need input
-		if len(masterGroup) == 1 && cfg.ControlPlaneEndpoint.Address != "" {
-			fmt.Println("When the environment is not HA, the LB address does not need to be entered, so delete the corresponding value.")
+		//Check whether LB should be configured
+		if len(masterGroup) >= 2 && !cfg.ControlPlaneEndpoint.IsInternalLBEnabled() && cfg.ControlPlaneEndpoint.Address == "" {
+			fmt.Println("The number of nodes in the ControlPlane is above 1, You must set the value of the LB address or enable the internal loadbalancer.")
 			os.Exit(0)
 		}
 
-		//Check whether LB should be configured
-		if len(masterGroup) >= 3 && cfg.ControlPlaneEndpoint.Address == "" {
-			fmt.Println("When the environment has at least three masters, You must set the value of the LB address.")
+		// Check whether LB address and the internal LB are both enabled
+		if cfg.ControlPlaneEndpoint.IsInternalLBEnabled() && cfg.ControlPlaneEndpoint.Address != "" {
+			fmt.Println("You cannot set up the internal load balancer and the LB address at the same time.")
 			os.Exit(0)
 		}
 	}
 
-	if cfg.ControlPlaneEndpoint.Address == "" {
+	if cfg.ControlPlaneEndpoint.Address == "" || cfg.ControlPlaneEndpoint.Address == "127.0.0.1" {
 		cfg.ControlPlaneEndpoint.Address = masterGroup[0].InternalAddress
 	}
 	if cfg.ControlPlaneEndpoint.Domain == "" {

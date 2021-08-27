@@ -30,15 +30,17 @@ There are three scenarios to use KubeKey.
 * **CentOS/RHEL**  *7*
 * **SUSE Linux Enterprise Server** *15*
 
+> Recommended Linux Kernel Version: `4.15 or later` \
+> You can run the `uname -srm` command to check the Linux Kernel Version.
 
 ### <span id = "KubernetesVersions">Kubernetes Versions</span> 
 
-* **v1.15**: &ensp; *v1.15.12*
-* **v1.16**: &ensp; *v1.16.13*
 * **v1.17**: &ensp; *v1.17.9*
 * **v1.18**: &ensp; *v1.18.6*
 * **v1.19**: &ensp; *v1.19.8*  (default)
-* **v1.20**: &ensp; *v1.20.4*
+* **v1.20**: &ensp; *v1.20.6*
+* **v1.21**: &ensp; *v1.21.4*
+* **v1.22**: &ensp; *v1.22.1*
 > Looking for more supported versions [Click here](./docs/kubernetes-versions.md)
 
 ## Requirements and Recommendations
@@ -300,6 +302,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/duguhaotian"><img src="https://avatars.githubusercontent.com/u/3174621?v=4?s=100" width="100px;" alt=""/><br /><sub><b>独孤昊天</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=duguhaotian" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/lshmouse"><img src="https://avatars.githubusercontent.com/u/118687?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Liu Shaohui</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=lshmouse" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/24sama"><img src="https://avatars.githubusercontent.com/u/43993589?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Leo Li</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=24sama" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/RolandMa1986"><img src="https://avatars.githubusercontent.com/u/1720333?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Roland</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=RolandMa1986" title="Code">💻</a></td>
+    <td align="center"><a href="https://ops.m114.org"><img src="https://avatars.githubusercontent.com/u/2347587?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vinson Zou</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=vinsonzou" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/tagGeeY"><img src="https://avatars.githubusercontent.com/u/35259969?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tag_gee_y</b></sub></a><br /><a href="https://github.com/kubesphere/kubekey/commits?author=tagGeeY" title="Code">💻</a></td>
   </tr>
 </table>
 

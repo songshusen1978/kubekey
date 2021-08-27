@@ -32,6 +32,20 @@ import (
 )
 
 var versionCheck = map[string]map[string]map[string]bool{
+	"v3.1.1": {
+		"k8s": {
+			"v1.20": true,
+			"v1.19": true,
+			"v1.18": true,
+			"v1.17": true,
+			"v1.16": true,
+			"v1.15": true,
+		},
+		"ks": {
+			"v3.0.0": true,
+			"v3.1.0": true,
+		},
+	},
 	"v3.1.0": {
 		"k8s": {
 			"v1.20": true,
@@ -116,9 +130,8 @@ Warning:
 
   An old Docker version may cause the failure of upgrade. It is recommended that you upgrade Docker to 20.10+ beforehand.
 
-  Issue: https://github.com/kubernetes/kubernetes/issues/101056
-
-`)
+  Issue: https://github.com/kubernetes/kubernetes/issues/101056`)
+			fmt.Print("\n")
 		}
 	}
 

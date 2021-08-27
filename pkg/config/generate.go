@@ -53,6 +53,9 @@ spec:
     - node1
     - node2
   controlPlaneEndpoint:
+    ##Internal loadbalancer for apiservers 
+    #internalLoadbalancer: haproxy
+
     domain: lb.kubesphere.local
     address: ""
     port: 6443
@@ -117,7 +120,9 @@ func GenerateClusterObj(k8sVersion, ksVersion, name, kubeconfig, clusterCfgPath 
 
 	if ksEnabled {
 		switch strings.TrimSpace(ksVersion) {
-		case "v3.1.0", "latest":
+		case "v3.1.1", "latest":
+			opt.KubeSphereConfigMap = kubesphere.V3_1_1
+		case "v3.1.0":
 			opt.KubeSphereConfigMap = kubesphere.V3_1_0
 		case "v3.0.0":
 			opt.KubeSphereConfigMap = kubesphere.V3_0_0
